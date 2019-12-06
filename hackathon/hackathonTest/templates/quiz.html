@@ -1,0 +1,782 @@
+{% extends 'base.html' %}
+{% load static %}
+
+    {% block title %}
+    <title>Home</title>
+    {% endblock %}
+
+
+
+
+    {% block body %}
+            <div class="testtimer">
+	  	<button type="button" name="button" disabled="">Time Remaining:&nbsp;<span id="time"></span>
+	  	</button>
+	</div>
+
+
+        <div class="modal fade" id="Information" tabindex="-1" role="document"  data-backdrop="static" data-keyboard="false" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title font-weight-bold " id="exampleModalLabel">INSTRUCTIONS</h4>
+                  </div>
+                  <div class="modal-body">
+                   <div class="alert alert-light" role="alert">
+                       <p>This Question of:<br>
+                        10 Aptitude Question<br>
+                        10 Programming Question<br>
+                        10 General Science</p>
+
+                       <p>Duration:<br> 50 Minutes, after which the test will be submitted automatically.<br>
+                       No negative marking is there.<br>
+                       Neither close this window nor open any other window, otherwise test will be aborted.</p>
+
+		  <hr>
+		  <p class="mb-0"><strong>NOTE:</strong> USE OF ANY UNFAIR MEANS WILL RESULT IN DIRECT DISQUALIFICATION OF THE TEAM</p>
+		  <hr>
+		  <div class="text-center mt-2">
+		  <button type="button" class="btn btn-lg" data-dismiss="modal" style="background: #43425d; color: white;" onclick="timeRemaining(); openFullscreen(); disable(); endTest()"> Start Test</button>
+		</div>
+		</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
+    <div class="container">
+        <form method="post" action="{% url 'result' %}"  name="myForm">
+            {% csrf_token %}
+             {% for Question in allQuestion %}
+
+            <div id="{{ Question.qId }}">
+                <br>
+            <h6 class="pt-2 pb-2 bg-secondary" style=" font-size:20px; color:white; border-radius:4px; margin-left:  10px; ">&nbsp;&nbsp;{{ Question.qId }}. {{ Question.question }}</h6>
+
+                &nbsp;&nbsp;&nbsp;<input type="radio" name="A{{ Question.qId }}" value="A" onclick="card{{ Question.qId }}()"> {{ Question.A }}<br>
+                &nbsp;&nbsp;&nbsp;<input type="radio" name="A{{ Question.qId }}" value="B" onclick="card{{ Question.qId }}()"> {{ Question.B }}<br>
+                &nbsp;&nbsp;&nbsp;<input type="radio" name="A{{ Question.qId }}" value="C" onclick="card{{ Question.qId }}()"> {{ Question.C }}<br>
+                &nbsp;&nbsp;&nbsp;<input type="radio" name="A{{ Question.qId }}" value="D" onclick="card{{ Question.qId }}()"> {{ Question.D }}<br>
+                {% if Question.id != 1 %}
+                <input  class="btn btn-secondary" type="button" onclick="pquestion{{ Question.qId }}()" value="Prev">
+                {% if Question.qId != 25 %}
+                    <input  class="btn btn-secondary" type="button" onclick="question{{ Question.qId }}()" value="Next">
+                {% endif %}
+                {% else %}
+                <input  class="btn btn-secondary" type="button" onclick="question1()" value="Next">
+                {% endif %}
+            </div>
+
+             {% endfor %}
+
+            <input type="hidden" name="teamId" value="{{ teamId }}">
+
+
+            <br>
+            <br>
+            <input class="btn btn-success" type="Submit" value="Submit">
+        </form>
+
+<!--        Cards   -->
+<!--        1st row  -->
+
+          <div class="card-deck">
+        <div id="c1" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">1</p>
+
+      </div>
+    </div>
+    <div id="c2" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">2</p>
+      </div>
+    </div>
+    <div id="c3" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">3</p>
+      </div>
+    </div>
+    <div id="c4" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">4</p>
+      </div>
+    </div>
+            <div id="c5" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">5</p>
+      </div>
+    </div>
+    <div id="c6" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">6</p>
+      </div>
+    </div>
+    <div id="c7" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">7</p>
+      </div>
+    </div>
+
+      <div id="c8" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">8</p>
+      </div>
+    </div>
+    <div id="c9" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">9</p>
+      </div>
+    </div>
+    <div id="c10" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">10</p>
+      </div>
+    </div>
+   </div>
+
+
+
+
+
+   <div class="card-deck">
+        <div id="c11" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">11</p>
+
+      </div>
+    </div>
+    <div id="c12" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">12</p>
+      </div>
+    </div>
+    <div id="c13" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">13</p>
+      </div>
+    </div>
+    <div id="c14" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">14</p>
+      </div>
+    </div>
+            <div id="c15" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">15</p>
+      </div>
+    </div>
+    <div id="c16" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">16</p>
+      </div>
+    </div>
+    <div id="c17" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">17</p>
+      </div>
+    </div>
+
+      <div id="c18" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">18</p>
+      </div>
+    </div>
+    <div id="c19" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">19</p>
+      </div>
+    </div>
+    <div id="c20" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">20</p>
+      </div>
+    </div>
+   </div>
+
+
+
+
+
+
+
+    <div class="card-deck">
+        <div id="c21" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">21</p>
+
+      </div>
+    </div>
+    <div id="c22" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">12</p>
+      </div>
+    </div>
+    <div id="c23" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">23</p>
+      </div>
+    </div>
+    <div id="c24" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">24</p>
+      </div>
+    </div>
+            <div id="c25" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">25</p>
+      </div>
+    </div>
+    <div id="c26" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">26</p>
+      </div>
+    </div>
+    <div id="c27" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">27</p>
+      </div>
+    </div>
+
+      <div id="c28" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">28</p>
+      </div>
+    </div>
+    <div id="c29" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">29</p>
+      </div>
+    </div>
+    <div id="c30" class="card" style="background-color: grey;">
+      <div class="card-body text-center">
+        <p class="card-text">30</p>
+      </div>
+    </div>
+   </div>
+
+    </div>
+
+<!--    <h2>Questions:</h2>-->
+<!--<div class="container">-->
+<!--    <form method="post">-->
+<!--        {% csrf_token %}-->
+<!--    <h6 class="pt-2 pb-2 bg-success col-lg-6 "><strong>Q1.</strong> A train running at the speed of 60 km/hr crosses a pole in 9 seconds. What is the length of the train?</h6>-->
+<!--    <div class="container">-->
+<!--    <input type="radio" name="a" value="A"> A. 120 metres<br>-->
+<!--    <input type="radio" name="a" value="B"> B. 180 metres<br>-->
+<!--    <input type="radio" name="a" value="C"> C. 324 metres<br>-->
+<!--    <input type="radio" name="a" value="D"> D. 150 metres<br>-->
+<!--    <button class="btn btn-secondary">Next</button>-->
+<!--        <input type="submit" value="submit">-->
+<!--    </div>-->
+<!--    </form>-->
+
+
+<!--</div>-->
+
+
+ <script type="text/javascript">
+                $(window).on('load',function(){
+                $('#Information').modal('show');
+                    });
+                </script>
+
+            <script>
+
+            function openFullscreen() {
+  var elem = document.documentElement;
+	if (elem.requestFullscreen) {
+    elem.requestFullscreen();
+  } else if (elem.mozRequestFullScreen) { /* Firefox */
+    elem.mozRequestFullScreen();
+  } else if (elem.webkitRequestFullscreen) { /* Chrome, Safari & Opera */
+    elem.webkitRequestFullscreen();
+  } else if (elem.msRequestFullscreen) { /* IE/Edge */
+    elem.msRequestFullscreen();
+  }
+
+}
+
+function disable()
+{
+ document.onkeydown = function (e)
+ {
+  return false;
+ }
+}
+
+function startTimer(duration, display) {
+    var timer = duration, minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer < 0) {
+            timer = duration;
+        }
+    }, 1000);
+
+    setTimeout(function(){
+        document.getElementById('thdForm').submit();
+    }, 30000)
+}
+
+	function timeRemaining() {
+    var fiftyMinutes = 60 * 50,
+        display = document.querySelector('#time');
+    startTimer(fiftyMinutes, display);
+};
+
+function endTest(){
+    window.setTimeout( function() {
+            document.myForm.submit();
+         }, 3000000
+    )
+}
+
+</script>
+
+<script>
+ $(window).on('load',function(){
+                  console.log('Debug')
+                document.getElementById('2').style.display = 'none';
+                document.getElementById('3').style.display = 'none';
+                document.getElementById('4').style.display = 'none';
+                document.getElementById('5').style.display = 'none';
+                document.getElementById('6').style.display = 'none';
+                document.getElementById('7').style.display = 'none';
+                document.getElementById('8').style.display = 'none';
+                document.getElementById('9').style.display = 'none';
+                document.getElementById('10').style.display = 'none';
+                document.getElementById('11').style.display = 'none';
+                document.getElementById('12').style.display = 'none';
+                document.getElementById('13').style.display = 'none';
+                document.getElementById('14').style.display = 'none';
+                document.getElementById('15').style.display = 'none';
+                document.getElementById('16').style.display = 'none';
+                document.getElementById('17').style.display = 'none';
+                document.getElementById('18').style.display = 'none';
+                document.getElementById('19').style.display = 'none';
+                document.getElementById('20').style.display = 'none';
+                document.getElementById('21').style.display = 'none';
+                document.getElementById('22').style.display = 'none';
+                document.getElementById('23').style.display = 'none';
+                document.getElementById('24').style.display = 'none';
+                document.getElementById('25').style.display = 'none';
+                document.getElementById('26').style.display = 'none';
+                document.getElementById('27').style.display = 'none';
+                document.getElementById('28').style.display = 'none';
+                document.getElementById('29').style.display = 'none';
+                document.getElementById('30').style.display = 'none';
+console.log('Debdeeug')
+                });
+
+function question1(){
+				document.getElementById('1').style.display = 'none';
+				document.getElementById('2').style.display = 'block';
+
+}
+
+function question2(){
+
+				document.getElementById('2').style.display = 'none';
+                document.getElementById('3').style.display = 'block';
+
+}
+
+function question3(){
+
+                document.getElementById('3').style.display = 'none';
+                document.getElementById('4').style.display = 'block';
+
+}
+
+
+function question4(){
+                document.getElementById('4').style.display = 'none';
+                document.getElementById('5').style.display = 'block';
+}
+
+function question5(){
+                document.getElementById('5').style.display = 'none';
+                document.getElementById('6').style.display = 'block';
+}
+
+function question6(){
+                document.getElementById('6').style.display = 'none';
+                document.getElementById('7').style.display = 'block';
+}
+
+function question7(){
+                document.getElementById('7').style.display = 'none';
+                document.getElementById('8').style.display = 'block';
+}
+
+function question8(){
+                document.getElementById('8').style.display = 'none';
+                document.getElementById('9').style.display = 'block';
+}
+
+function question9(){
+                document.getElementById('9').style.display = 'none';
+                document.getElementById('10').style.display = 'block';
+}
+
+function question10(){
+                document.getElementById('10').style.display = 'none';
+                document.getElementById('11').style.display = 'block';
+}
+
+function question11(){
+                document.getElementById('11').style.display = 'none';
+                document.getElementById('12').style.display = 'block';
+}
+
+function question12(){
+                document.getElementById('12').style.display = 'none';
+                document.getElementById('13').style.display = 'block';
+}
+
+function question13(){
+                document.getElementById('13').style.display = 'none';
+                document.getElementById('14').style.display = 'block';
+}
+
+function question14(){
+                document.getElementById('14').style.display = 'none';
+                document.getElementById('15').style.display = 'block';
+}
+
+function question15(){
+                document.getElementById('15').style.display = 'none';
+                document.getElementById('16').style.display = 'block';
+}
+
+function question16(){
+                document.getElementById('16').style.display = 'none';
+                document.getElementById('17').style.display = 'block';
+}
+
+function question17(){
+                document.getElementById('17').style.display = 'none';
+                document.getElementById('18').style.display = 'block';
+}
+
+function question18(){
+                document.getElementById('18').style.display = 'none';
+                document.getElementById('19').style.display = 'block';
+}
+
+function question19(){
+                document.getElementById('19').style.display = 'none';
+                document.getElementById('20').style.display = 'block';
+}
+
+function question20(){
+                document.getElementById('20').style.display = 'none';
+                document.getElementById('21').style.display = 'block';
+}
+
+function question21(){
+                document.getElementById('21').style.display = 'none';
+                document.getElementById('22').style.display = 'block';
+}
+
+function question22(){
+                document.getElementById('22').style.display = 'none';
+                document.getElementById('23').style.display = 'block';
+}
+
+function question23(){
+                document.getElementById('23').style.display = 'none';
+                document.getElementById('24').style.display = 'block';
+}
+
+function question24(){
+                document.getElementById('24').style.display = 'none';
+                document.getElementById('25').style.display = 'block';
+}
+
+function question25(){
+                document.getElementById('25').style.display = 'none';
+                document.getElementById('26').style.display = 'block';
+}
+
+function question26(){
+                document.getElementById('26').style.display = 'none';
+                document.getElementById('27').style.display = 'block';
+}
+
+function question27(){
+                document.getElementById('27').style.display = 'none';
+                document.getElementById('28').style.display = 'block';
+}
+
+function question28(){
+                document.getElementById('28').style.display = 'none';
+                document.getElementById('29').style.display = 'block';
+}
+
+function question29(){
+                document.getElementById('29').style.display = 'none';
+                document.getElementById('30').style.display = 'block';
+}
+
+// previous functions
+function pquestion2(){
+    document.getElementById('2').style.display = 'none';
+    document.getElementById('1').style.display = 'block';
+}
+
+function pquestion3(){
+    document.getElementById('3').style.display = 'none';
+    document.getElementById('2').style.display = 'block';
+}
+
+function pquestion4(){
+    document.getElementById('4').style.display = 'none';
+    document.getElementById('3').style.display = 'block';
+}
+
+
+function pquestion5(){
+    document.getElementById('5').style.display = 'none';
+    document.getElementById('4').style.display = 'block';
+}
+
+function pquestion6(){
+    document.getElementById('6').style.display = 'none';
+    document.getElementById('5').style.display = 'block';
+}
+
+function pquestion7(){
+    document.getElementById('7').style.display = 'none';
+    document.getElementById('6').style.display = 'block';
+}
+
+
+function pquestion8(){
+    document.getElementById('8').style.display = 'none';
+    document.getElementById('7').style.display = 'block';
+}
+function pquestion9(){
+    document.getElementById('9').style.display = 'none';
+    document.getElementById('8').style.display = 'block';
+}
+
+function pquestion10(){
+    document.getElementById('10').style.display = 'none';
+    document.getElementById('9').style.display = 'block';
+}
+
+
+function pquestion11(){
+    document.getElementById('11').style.display = 'none';
+    document.getElementById('10').style.display = 'block';
+}
+
+function pquestion12(){
+    document.getElementById('12').style.display = 'none';
+    document.getElementById('11').style.display = 'block';
+}
+
+function pquestion13(){
+    document.getElementById('13').style.display = 'none';
+    document.getElementById('12').style.display = 'block';
+}
+
+function pquestion14(){
+    document.getElementById('14').style.display = 'none';
+    document.getElementById('13').style.display = 'block';
+}
+
+function pquestion15(){
+    document.getElementById('15').style.display = 'none';
+    document.getElementById('14').style.display = 'block';
+}
+
+function pquestion16(){
+    document.getElementById('16').style.display = 'none';
+    document.getElementById('15').style.display = 'block';
+}
+
+
+function pquestion17(){
+    document.getElementById('17').style.display = 'none';
+    document.getElementById('16').style.display = 'block';
+}
+
+
+function pquestion18(){
+    document.getElementById('18').style.display = 'none';
+    document.getElementById('17').style.display = 'block';
+}
+
+function pquestion19(){
+    document.getElementById('19').style.display = 'none';
+    document.getElementById('18').style.display = 'block';
+}
+
+function pquestion20(){
+    document.getElementById('20').style.display = 'none';
+    document.getElementById('19').style.display = 'block';
+}
+
+function pquestion21(){
+    document.getElementById('21').style.display = 'none';
+    document.getElementById('20').style.display = 'block';
+}
+
+function pquestion22(){
+    document.getElementById('22').style.display = 'none';
+    document.getElementById('21').style.display = 'block';
+}
+
+function pquestion23(){
+    document.getElementById('23').style.display = 'none';
+    document.getElementById('22').style.display = 'block';
+}
+
+function pquestion24(){
+    document.getElementById('24').style.display = 'none';
+    document.getElementById('23').style.display = 'block';
+}
+
+function pquestion25(){
+    document.getElementById('25').style.display = 'none';
+    document.getElementById('24').style.display = 'block';
+}
+
+function pquestion26(){
+    document.getElementById('26').style.display = 'none';
+    document.getElementById('25').style.display = 'block';
+}
+
+
+function pquestion27(){
+    document.getElementById('27').style.display = 'none';
+    document.getElementById('26').style.display = 'block';
+}
+
+
+function pquestion28(){
+    document.getElementById('28').style.display = 'none';
+    document.getElementById('27').style.display = 'block';
+}
+
+function pquestion29(){
+    document.getElementById('29').style.display = 'none';
+    document.getElementById('28').style.display = 'block';
+}
+
+function pquestion30(){
+	document.getElementById('30').style.display = 'none';
+    document.getElementById('29').style.display = 'block';
+}
+
+//card
+function card1(){
+    document.getElementById('c1').style.backgroundColor = 'yellow';
+	}
+	function card2(){
+    document.getElementById('c2').style.backgroundColor = 'yellow';
+	}
+	function card3(){
+	    document.getElementById('c3').style.backgroundColor = 'yellow';
+	}
+	function card4(){
+	    document.getElementById('c4').style.backgroundColor = 'yellow';
+	}
+	function card5(){
+	    document.getElementById('c5').style.backgroundColor = 'yellow';
+	}
+	function card6(){
+	    document.getElementById('c6').style.backgroundColor = 'yellow';
+	}
+	function card7(){
+	    document.getElementById('c7').style.backgroundColor = 'yellow';
+	}
+	function card8(){
+	    document.getElementById('c8').style.backgroundColor = 'yellow';
+	}
+	function card9(){
+	    document.getElementById('c9').style.backgroundColor = 'yellow';
+	}
+	function card10(){
+	    document.getElementById('c10').style.backgroundColor = 'yellow';
+	}
+	function card11(){
+	    document.getElementById('c11').style.backgroundColor = 'yellow';
+	}
+	function card12(){
+	    document.getElementById('c12').style.backgroundColor = 'yellow';
+	}
+	function card13(){
+	    document.getElementById('c13').style.backgroundColor = 'yellow';
+	}
+	function card14(){
+	    document.getElementById('c14').style.backgroundColor = 'yellow';
+	}
+	function card15(){
+	    document.getElementById('c15').style.backgroundColor = 'yellow';
+	}
+	function card16(){
+	    document.getElementById('c16').style.backgroundColor = 'yellow';
+	}
+	function card17(){
+	    document.getElementById('c17').style.backgroundColor = 'yellow';
+	}
+	function card18(){
+	    document.getElementById('c18').style.backgroundColor = 'yellow';
+	}
+	function card19(){
+	    document.getElementById('c19').style.backgroundColor = 'yellow';
+	}
+	function card20(){
+	    document.getElementById('c20').style.backgroundColor = 'yellow';
+	}
+	function card21(){
+	    document.getElementById('c21').style.backgroundColor = 'yellow';
+	}
+	function card22(){
+	    document.getElementById('c22').style.backgroundColor = 'yellow';
+	}
+	function card23(){
+	    document.getElementById('c23').style.backgroundColor = 'yellow';
+	}
+	function card24(){
+	    document.getElementById('c24').style.backgroundColor = 'yellow';
+	}
+	function card25(){
+	    document.getElementById('c25').style.backgroundColor = 'yellow';
+	}
+	function card26(){
+	    document.getElementById('c26').style.backgroundColor = 'yellow';
+	}
+	function card27(){
+	    document.getElementById('c27').style.backgroundColor = 'yellow';
+	}
+	function card28(){
+	    document.getElementById('c28').style.backgroundColor = 'yellow';
+	}
+	function card29(){
+	    document.getElementById('c29').style.backgroundColor = 'yellow';
+	}
+	function card30(){
+	    document.getElementById('c30').style.backgroundColor = 'yellow';
+	}
+
+</script>
+
+
+
+
+    {% endblock %}
